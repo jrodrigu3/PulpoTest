@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'PulpoTest';
+
+  private translate = inject(TranslateService);
+
+  constructor() {
+    this.translate.setDefaultLang('es');
+  }
+
 }
+

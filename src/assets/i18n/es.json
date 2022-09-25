@@ -1,8 +1,9 @@
 {
-  "BOTONES": {
-  },
-  "PROCESOS": {
-  },
+  "BOTONES": {},
+  "PROCESOS": {},
   "TITLE": {
+    "TITULO": "Titulo",
+    "ANHO": "Año"
+
   }
 }

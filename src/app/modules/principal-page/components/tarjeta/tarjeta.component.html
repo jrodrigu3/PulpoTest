@@ -1,0 +1,22 @@
+<article class="card">
+  <a [routerLink]="['/movie-details', movie.imdbID]" class="card__link">
+    <figure>
+      <img rel="preload" as="image" class="movieImg" [src]="movie.Poster" [alt]="movie.Title" />
+    </figure>
+  </a>
+  <div class="card__details">
+    <figure class="card__favorite">
+      <img (click)="setFavorite()" rel="preload" as="image" src="../../../../../assets/images/{{getIcon()}}" [alt]="movie.Title" />
+    </figure>
+    <h3>{{movie.Title}}</h3>
+    <ul class="card__list">
+      <li>
+        <label class="table__label">{{ 'TITLE.TITULO' | translate }}:</label>{{movie.Title}}
+      </li>
+      <li>
+        <label class="table__label">{{ 'TITLE.ANHO' | translate }}:</label>{{movie.Year}}
+      </li>
+
+    </ul>
+  </div>
+</article>
