@@ -1,0 +1,39 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
+import { LocalStorageService } from './localStorage.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MovieService {
+
+  /**
+   * Injeccion del HttpClient
+   */
+  private http = inject(HttpClient);
+
+  // constructor() { }
+
+  /**
+   * Variable que contiene la key de la api
+   */
+  private apiKey = 'f30ff9a8';
+  /**
+   * Url del servicio
+   */
+  private urlService = 'http://www.omdbapi.com/';
+
+  /**
+   * Metodo que trae todas las peliculas
+   * @param type Tipo de movies
+   * @param name nombre de la pelicula
+   */
+  getMovies(type: string, name: string) {
+    return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`);
+  }
+
+
+
+}
