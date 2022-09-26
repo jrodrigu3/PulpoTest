@@ -10,3 +10,16 @@ section.character__list {
   display: flex;
   justify-content: center;
 }
+
+.navBar {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+@media (min-width: 700px) {
+  .navBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}

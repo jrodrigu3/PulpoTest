@@ -7,17 +7,21 @@ import { MovieService } from './services/movie.service';
 import { TarjetaComponent } from './components/tarjeta/tarjeta.component';
 import { PrincipalPageComponent } from './principal-page.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     TarjetaComponent,
-    PrincipalPageComponent
+    PrincipalPageComponent,
+    NavBarComponent
   ],
   imports: [
     CommonModule,
     PrincipalPageRoutingModule,
     HttpClientModule,
-    TranslateModule
+    TranslateModule,
+    ReactiveFormsModule
 
   ],
   providers: [

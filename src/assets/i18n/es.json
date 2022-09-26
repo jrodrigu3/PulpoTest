@@ -1,9 +1,12 @@
 {
-  "BOTONES": {},
-  "PROCESOS": {},
+  "BOTONES": {
+    "BUSCAR": "Buscar"
+  },
+  "TEXT": {
+    "BUSCAR_NAME": "Buscar por nombre"
+  },
   "TITLE": {
     "TITULO": "Titulo",
     "ANHO": "Año"
-
   }
 }
