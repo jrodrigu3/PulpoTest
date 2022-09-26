@@ -9,7 +9,7 @@ import { PrincipalPageComponent } from './principal-page.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 @NgModule({
   declarations: [
     TarjetaComponent,
@@ -21,8 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PrincipalPageRoutingModule,
     HttpClientModule,
     TranslateModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    InfiniteScrollModule
   ],
   providers: [
     MovieService

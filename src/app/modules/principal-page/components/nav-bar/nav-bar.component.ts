@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -6,19 +6,25 @@ import { FormControl } from '@angular/forms';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent {
 
+  /**
+   * form control del buscador
+   */
   navBar = new FormControl();
 
-  constructor() { }
+  /**
+   * Propiedad de salida que emite el de un pelicula buscada
+   */
+  @Output() eventMovie: EventEmitter<string> = new EventEmitter();
 
-  ngOnInit(): void {
-  }
-
-  public share(): void {
+  /**
+   * Metodo para comparatir el nombre de la pelicula, con el componente padre
+   */
+  public shareNameMovie(): void {
     const { value } = this.navBar;
     if (!!value) {
-      console.log(this.navBar.value);
+      this.eventMovie?.emit(value);
     }
   }
 

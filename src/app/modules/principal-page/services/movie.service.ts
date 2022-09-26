@@ -30,10 +30,13 @@ export class MovieService {
    * @param type Tipo de movies
    * @param name nombre de la pelicula
    */
-  getMovies(type: string, name: string) {
+  getMovies(type: string = 'movie', name: string) {
     return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`);
   }
 
+  getMoviesPage(type: string = 'movie', name: string, pagine: number) {
+    return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}&page=${pagine}`);
+  }
 
 
 }

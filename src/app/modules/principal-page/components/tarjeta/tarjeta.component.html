@@ -12,7 +12,7 @@
     <h3>{{movie.Title}}</h3>
     <ul class="card__list">
       <li>
-        <label class="table__label">{{ 'TITLE.TITULO' | translate }}:</label>{{movie.Title}}
+        <label class="table__label">{{ 'TITLE.TITULO' | translate }}:</label>{{movie.Title | slice:0:32}}
       </li>
       <li>
         <label class="table__label">{{ 'TITLE.ANHO' | translate }}:</label>{{movie.Year}}

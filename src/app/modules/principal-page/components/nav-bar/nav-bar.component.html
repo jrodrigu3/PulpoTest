@@ -1,9 +1,10 @@
 <section class="search__container">
   <div class="search__name">
     <label for="searchName">{{ 'TEXT.BUSCAR_NAME' | translate }}</label>
-    <input type="text" class="search__input" placeholder="{{ 'TEXT.BUSCAR_NAME' | translate }}" [formControl]="navBar">
+    <input (blur)="shareNameMovie()" type="text" class="search__input"
+      placeholder="{{ 'TEXT.BUSCAR_NAME' | translate }}" [formControl]="navBar">
   </div>
   <div class="button">
-    <button (click)="share()">{{ 'BOTONES.BUSCAR' | translate }}</button>
+    <button (click)="shareNameMovie()">{{ 'BOTONES.BUSCAR' | translate }}</button>
   </div>
 </section>
