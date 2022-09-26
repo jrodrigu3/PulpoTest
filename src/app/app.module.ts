@@ -7,6 +7,8 @@ import { PrincipalPageModule } from './modules/principal-page/principal-page.mod
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { SpinnerModule } from './shared/components/spinner/spinner.module';
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -20,6 +22,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     AppRoutingModule,
     PrincipalPageModule,
+    SpinnerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -27,9 +30,8 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-
   ],
-  providers: [],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

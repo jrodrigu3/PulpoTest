@@ -73,8 +73,13 @@ export class PrincipalPageComponent implements OnInit {
     this.pageNum++;
     this.movieService.getMoviesPage('movie', this._movieName, this.pageNum).subscribe((data: DataResponse) => {
       if (!!data) {
-        this.search = [...this.search, ...data.Search];
-        this.moviesData(this.search);
+        if (!!data.Search) {
+          this.search = [...this.search, ...data.Search];
+          this.moviesData(this.search);
+        }
+        else {
+          console.log('Error');
+        }
       }
     });;
   }

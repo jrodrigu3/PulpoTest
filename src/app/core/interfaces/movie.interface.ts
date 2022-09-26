@@ -1,7 +1,7 @@
 export interface DataResponse {
-  Response?: boolean;
+  Response: string;
   Search?: Array<Search>;
-  totalResults? : number;
+  totalResults?: number;
 }
 
 export interface Search {
