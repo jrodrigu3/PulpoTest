@@ -11,18 +11,39 @@ import { MovieService } from './services/movie.service';
 })
 export class PrincipalPageComponent implements OnInit {
 
+  /**
+   * Injección del service de movie
+   */
   private movieService = inject(MovieService);
+  /**
+   * Injeccion del servicio de storage
+   */
   private storageService = inject(LocalStorageService);
-
-
+  /**
+   * Array de peliculas encontradas
+   */
   public search: Array<Search>;
-
-  showButton = false;
-
+  /**
+   * Variable para lavisualización del boton
+   */
+  public showButton = false;
+  /**
+   * Variable para el alto del escroll
+   */
   private _scrollHeight = 200;
-  private pageNum = 1;
+  /**
+   * variable primada para la pagina inicial
+   */
+  private _pageNum = 1;
+  /**
+   * Variable privada para el nombre de la pelicula a buscar
+   */
   private _movieName: string;
 
+  /**
+   * Metodo contructor
+   * @param document document
+   */
   constructor(@Inject(DOCUMENT) private document: Document) { }
 
   /**
@@ -33,18 +54,27 @@ export class PrincipalPageComponent implements OnInit {
   }
 
   /**
-   * Metodo para peliculas
+   * Metodo para buscar peliculas
+   * @param movieName variable que contiene el nombre de la pelicula
    */
   public getMovies(movieName: string): void {
     this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
       if (!!data) {
-        this.pageNum = 1;
+        this._movieName = movieName;
+        this._pageNum = 1;
         this.search = data.Search;
         this.moviesData(this.search);
-      }
+        if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
+          this.onScrollDown();
+        };
+      };
     });
   }
 
+  /**
+   * metodo para add propiedad favorite
+   * @param movie contiene la listas de peliculas encontradas
+   */
   private moviesData(movie: Array<Search>): void {
     const fav = this.storageService.getMovies();
     movie.forEach(mov => {
@@ -53,15 +83,25 @@ export class PrincipalPageComponent implements OnInit {
     });
   }
 
-  public onMovie(evento: any): void {
-    this._movieName = evento;
-    this.getMovies(evento)
+  /**
+   *
+   * @param movieName nombre de la pelicula
+   */
+  public onMovie(movieName: string): void {
+    this._movieName = movieName;
+    this.getMovies(movieName)
   }
 
-  onScrollTop(): void {
+  /**
+   * Metodo para subir al comienzo de scroll
+   */
+  public onScrollTop(): void {
     this.document.documentElement.scrollTop = 0;
   }
 
+  /**
+   * Decorador hostListener
+   */
   @HostListener('window:scroll')
   onWindowScroll(): void {
     const yOffSet = window.pageYOffset;
@@ -69,9 +109,12 @@ export class PrincipalPageComponent implements OnInit {
     this.showButton = (yOffSet || scrollTop) > this._scrollHeight;
   }
 
+  /**
+   * Metodo para buscar peliculas con el scroll - Lazy loading
+   */
   onScrollDown(): void {
-    this.pageNum++;
-    this.movieService.getMoviesPage('movie', this._movieName, this.pageNum).subscribe((data: DataResponse) => {
+    this._pageNum++;
+    this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
       if (!!data) {
         if (!!data.Search) {
           this.search = [...this.search, ...data.Search];
@@ -83,5 +126,4 @@ export class PrincipalPageComponent implements OnInit {
       }
     });;
   }
-
 }

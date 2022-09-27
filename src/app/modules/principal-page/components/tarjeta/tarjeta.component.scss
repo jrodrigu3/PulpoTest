@@ -50,7 +50,7 @@ figure.card__favorite {
   img {
     max-width: 200px;
     min-height: 50px;
-
+    min-height: 300px;
     opacity: 0.78;
     transition: opacity 0.5s;
     border-radius: 0.2rem;
@@ -69,6 +69,10 @@ figure.card__favorite {
     opacity: 1;
     margin-top: -10px;
     cursor: pointer;
+  }
+
+  .card .movieImg {
+    min-height: 300px;
   }
 
   &:hover {
