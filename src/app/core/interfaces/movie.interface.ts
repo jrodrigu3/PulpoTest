@@ -5,7 +5,7 @@ export interface DataResponse {
 }
 
 export interface Search {
-  imdbID: string;
+  imdbID?: string;
   Year: string;
   Type: string;
   Title: string;

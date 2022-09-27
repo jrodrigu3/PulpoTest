@@ -13,44 +13,26 @@ figure.card__favorite {
   border-radius: 0.5rem;
   cursor: pointer;
 
-
-
-  ul {
-    li {
-      padding: .6rem 0;
-      display: flex;
-      justify-content: space-between;
-      color: #09cdce;
-
-      .table__label {
-        color: #d8d6d6;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-        hyphens: auto;
-      }
-
-    }
-  }
-
   .card__details {
 
     padding: 0 10px 10px;
     position: relative;
+    height: 59px;
 
     h3 {
-      color: #fff;
+      color: rgb(0, 0, 0);
+      height: 28px;
     }
+
+
   }
 
-  .card__list {
-    margin-top: 1rem;
-    padding: 0;
-  }
+
 
   img {
     max-width: 200px;
     min-height: 50px;
-    min-height: 300px;
+    max-height: 300px;
     opacity: 0.78;
     transition: opacity 0.5s;
     border-radius: 0.2rem;
@@ -67,7 +49,7 @@ figure.card__favorite {
     height: 30px;
     right: .8rem;
     opacity: 1;
-    margin-top: -10px;
+    margin-top: 13px;
     cursor: pointer;
   }
 

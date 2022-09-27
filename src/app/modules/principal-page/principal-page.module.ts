@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PrincipalPageRoutingModule } from './principal-page-routing.module';
+import { PrincipalPageRoutingModule, routes } from './principal-page-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MovieService } from './services/movie.service';
 import { TarjetaComponent } from './components/tarjeta/tarjeta.component';
@@ -11,11 +11,15 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { SpinnerIntercepor } from 'src/app/shared/interceptors/spinner.interceptor';
+import { HeaderComponent } from './components/header/header.component';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from 'src/app/core/material.module';
 @NgModule({
   declarations: [
     TarjetaComponent,
     PrincipalPageComponent,
-    NavBarComponent
+    NavBarComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +27,10 @@ import { SpinnerIntercepor } from 'src/app/shared/interceptors/spinner.intercept
     HttpClientModule,
     TranslateModule,
     ReactiveFormsModule,
-    InfiniteScrollModule
+    RouterModule.forChild(routes),
+    InfiniteScrollModule,
+    MaterialModule
+
   ],
   providers: [
     MovieService,

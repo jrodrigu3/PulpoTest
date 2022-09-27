@@ -25,7 +25,7 @@ export class TarjetaComponent implements OnInit {
   }
 
   getIcon(): string {
-    return this.movie.favorite ? 'heart-solid.svg' : 'heart.svg';
+    return this.movie?.favorite ? 'heart-solid.svg' : 'heart.svg';
   }
 
   setFavorite(): void {
