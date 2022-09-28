@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
+import Swal from 'sweetalert2'
+import { SwalUtils } from 'src/app/core/utils/swal-util';
 
 @Component({
   selector: 'app-principal-page',
@@ -74,14 +76,19 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
   public getMovies(movieName: string): void {
     const movieSub: Subscription = this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
       if (!!data) {
-        this._movieName = movieName;
-        this._pageNum = 1;
-        this.search = data.Search;
-        this.moviesData(this.search);
-        if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
-          this.onScrollDown();
-        };
-      };
+        if (!!data.Search) {
+
+          this._movieName = movieName;
+          this._pageNum = 1;
+          this.search = data.Search;
+          this.moviesData(this.search);
+          if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
+            this.onScrollDown();
+          };
+        } else {
+          SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
+        }
+      }
     });
     this._arraySubscriptors.push(movieSub);
   }
@@ -136,7 +143,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
           this.moviesData(this.search);
         }
         else {
-          console.log('Error');
+          SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
         }
       }
     });;
