@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MaterialModule } from 'src/app/core/material.module';
 import { PrincipalPageRoutingModule } from '../principal-page-routing.module';
+import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 
 import { MovieService } from './movie.service';
 
@@ -32,4 +33,29 @@ describe('MovieService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+
+
+  describe('test for getMovies', () => {
+    it('should return the observable ', (doneFn) => {
+      service.getMovies(null, 'superman').subscribe((value) => {
+        expect(value).toBeTruthy();
+        doneFn();
+      });
+      // AAA
+    });
+
+
+    it('should return the observable ', (doneFn) => {
+      service.getMoviesPage(null, 'batman', 2).subscribe((value) => {
+        service.getMoviesPage(null, 'batman', 3).subscribe((value) => {
+          expect(value).toBeTruthy();
+          doneFn();
+        });
+      });
+      // AAA
+    });
+
+  });
+
 });

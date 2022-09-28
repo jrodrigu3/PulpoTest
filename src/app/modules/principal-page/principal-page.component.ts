@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Inject, inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, inject, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
@@ -9,7 +10,7 @@ import { MovieService } from './services/movie.service';
   templateUrl: './principal-page.component.html',
   styleUrls: ['./principal-page.component.scss']
 })
-export class PrincipalPageComponent implements OnInit {
+export class PrincipalPageComponent implements OnInit, OnDestroy {
 
   /**
    * Injección del service de movie
@@ -40,6 +41,12 @@ export class PrincipalPageComponent implements OnInit {
    */
   private _movieName: string;
 
+
+  /**
+   * define arreglo de subscripciones que maneja todas las subscripciones del componente
+   */
+  private _arraySubscriptors: Array<Subscription> = [];
+
   /**
    * Metodo contructor
    * @param document document
@@ -54,11 +61,18 @@ export class PrincipalPageComponent implements OnInit {
   }
 
   /**
+   * Metodo encargado de destruir el componente
+   */
+  ngOnDestroy(): void {
+    this._arraySubscriptors.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
    * Metodo para buscar peliculas
    * @param movieName variable que contiene el nombre de la pelicula
    */
   public getMovies(movieName: string): void {
-    this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
+    const movieSub: Subscription = this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
       if (!!data) {
         this._movieName = movieName;
         this._pageNum = 1;
@@ -69,6 +83,7 @@ export class PrincipalPageComponent implements OnInit {
         };
       };
     });
+    this._arraySubscriptors.push(movieSub);
   }
 
   /**
@@ -114,7 +129,7 @@ export class PrincipalPageComponent implements OnInit {
    */
   onScrollDown(): void {
     this._pageNum++;
-    this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
+    const moviePageSub: Subscription = this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
       if (!!data) {
         if (!!data.Search) {
           this.search = [...this.search, ...data.Search];
@@ -125,5 +140,6 @@ export class PrincipalPageComponent implements OnInit {
         }
       }
     });;
+    this._arraySubscriptors.push(moviePageSub);
   }
 }
