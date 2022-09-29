@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from '../../services/localStorage.service';
 
@@ -17,8 +17,10 @@ export class TarjetaComponent implements OnInit {
    */
   @Input() movie: Search;
 
-
-  constructor() { }
+  /**
+   * Propiedad de salida que emite si se eliminó una pelicula de favorito
+   */
+  @Output() eventMovie: EventEmitter<boolean> = new EventEmitter();
 
   ngOnInit(): void {
     this.getIcon();
@@ -33,5 +35,6 @@ export class TarjetaComponent implements OnInit {
     this.getIcon();
     this.movie.favorite = !isFavorite;
     this.storageService.addOrRemoveFavorite(this.movie);
+    this.eventMovie?.emit(true);
   }
 }

@@ -3,7 +3,7 @@
 </div>
 <div class=" container">
   <section *ngIf="!!search" class="character__list" infiniteScroll (scrolled)="onScrollDown()">
-    <app-tarjeta *ngFor="let movie of search" [movie]="movie"></app-tarjeta>
+    <app-tarjeta (eventMovie)="getFavortiesMovies($event)" *ngFor="let movie of search" [movie]="movie"></app-tarjeta>
     <button *ngIf="showButton" (click)="onScrollTop()" class="button">⬆️</button>
   </section>
 </div>

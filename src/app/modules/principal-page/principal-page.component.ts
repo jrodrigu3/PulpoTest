@@ -6,6 +6,8 @@ import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
 import Swal from 'sweetalert2'
 import { SwalUtils } from 'src/app/core/utils/swal-util';
+import { ActivatedRoute } from '@angular/router';
+import { ERoutes } from 'src/app/core/enum/tipoOperacion.enum';
 
 @Component({
   selector: 'app-principal-page',
@@ -22,6 +24,10 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Injeccion del servicio de storage
    */
   private storageService = inject(LocalStorageService);
+  /**
+   * Injeccion del servicio de storage
+   */
+  private _route = inject(ActivatedRoute);
   /**
    * Array de peliculas encontradas
    */
@@ -42,7 +48,10 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Variable privada para el nombre de la pelicula a buscar
    */
   private _movieName: string;
-
+  /**
+   * Variable privada para el nombre de la pelicula a buscar
+   */
+  public isWishList: boolean;
 
   /**
    * define arreglo de subscripciones que maneja todas las subscripciones del componente
@@ -53,13 +62,19 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo contructor
    * @param document document
    */
-  constructor(@Inject(DOCUMENT) private document: Document) { }
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.isWishList = this._route.snapshot?.url[0]?.path === ERoutes.wishList;
+  }
 
   /**
    * Metodo para inicializar el componente
    */
   ngOnInit(): void {
-    this.getMovies('superman');
+    if (!this.isWishList) {
+      this.getMovies('superman');
+    } else {
+      this.getFavortiesMovies(true);
+    }
   }
 
   /**
@@ -69,6 +84,19 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
     this._arraySubscriptors.forEach(sub => sub.unsubscribe());
   }
 
+  /**
+   * get que obtiene el tipo de operación actual
+   */
+  get getRoutWishList() {
+    return this._route.snapshot.url[1].path;
+  }
+
+  /**
+ * get utilizado para saber si el tipo de operacion es crear
+ */
+  get isCrear() {
+    return this.getRoutWishList === ERoutes.wishList;
+  }
   /**
    * Metodo para buscar peliculas
    * @param movieName variable que contiene el nombre de la pelicula
@@ -133,19 +161,28 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
   /**
    * Metodo para buscar peliculas con el scroll - Lazy loading
    */
-  onScrollDown(): void {
-    this._pageNum++;
-    const moviePageSub: Subscription = this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
-      if (!!data) {
-        if (!!data.Search) {
-          this.search = [...this.search, ...data.Search];
-          this.moviesData(this.search);
+  public onScrollDown(): void {
+    if (!this.isWishList) {
+      this._pageNum++;
+      const moviePageSub: Subscription = this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
+        if (!!data) {
+          if (!!data.Search) {
+            this.search = [...this.search, ...data.Search];
+            this.moviesData(this.search);
+          }
+          else {
+            SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
+          }
         }
-        else {
-          SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
-        }
-      }
-    });;
-    this._arraySubscriptors.push(moviePageSub);
+      });;
+      this._arraySubscriptors.push(moviePageSub);
+    }
+  }
+
+  /**
+   * Obtiene las peliculas favoritas del local storage
+   */
+  public getFavortiesMovies(event: boolean = false): void {
+    if (event && this.isWishList) this.search = this.storageService.getMovies();
   }
 }
