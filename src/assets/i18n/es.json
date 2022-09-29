@@ -2,6 +2,10 @@
   "BOTONES": {
     "BUSCAR": "Buscar"
   },
+  "HEADER": {
+    "HOME": "Home",
+    "WISH_LIST": "Wish list"
+  },
   "TEXT": {
     "BUSCAR_NAME": "Buscar por nombre"
   },

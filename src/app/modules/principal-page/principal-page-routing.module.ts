@@ -8,7 +8,7 @@ export const routes: Routes = [
     path: '',
     children: [
       { path: '', component: PrincipalPageComponent },
-      { path: 'asd', component: NavBarComponent },
+      { path: 'wish-list', component: NavBarComponent },
     ]
   },
   {

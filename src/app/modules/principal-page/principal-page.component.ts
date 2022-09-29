@@ -77,7 +77,6 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
     const movieSub: Subscription = this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
       if (!!data) {
         if (!!data.Search) {
-
           this._movieName = movieName;
           this._pageNum = 1;
           this.search = data.Search;
