@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DataResponse } from 'src/app/core/interfaces/movie.interface';
+import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +38,17 @@ export class MovieService {
    * @param pagine paginacion de la pelicula
    * @returns
    */
-  getMoviesPage(type: string = 'movie', name: string, pagine: number) {
+  getMoviesPage(type: string = 'movie', name: string, pagine: number): Observable<DataResponse> {
     return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}&page=${pagine}`);
   }
 
+  /**
+   * Metodo para buscar una pelicula
+   * @param id id de la pelicula a buscar
+   * @returns respuesta de la pelicula
+   */
+  getOneMovies(id: string): Observable<Search> {
+    return this.http.get<Search>(`${this.urlService}?apikey=${this.apiKey}&i=${id}`);
+  }
 
 }

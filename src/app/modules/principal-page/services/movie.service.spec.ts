@@ -24,7 +24,6 @@ describe('MovieService', () => {
         InfiniteScrollModule,
         MaterialModule
       ],
-
     });
 
     service = TestBed.inject(MovieService);
@@ -33,8 +32,6 @@ describe('MovieService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-
 
   describe('test for getMovies', () => {
     it('should return the observable ', (doneFn) => {
@@ -45,7 +42,6 @@ describe('MovieService', () => {
       // AAA
     });
 
-
     it('should return the observable ', (doneFn) => {
       service.getMoviesPage(null, 'batman', 2).subscribe((value) => {
         service.getMoviesPage(null, 'batman', 3).subscribe((value) => {
@@ -55,7 +51,6 @@ describe('MovieService', () => {
       });
       // AAA
     });
-
   });
 
 });

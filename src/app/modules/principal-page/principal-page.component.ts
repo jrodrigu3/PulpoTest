@@ -33,6 +33,10 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   public search: Array<Search>;
   /**
+   * Array de peliculas encontradas
+   */
+  public oneMovieDesription: Search;
+  /**
    * Variable para lavisualización del boton
    */
   public showButton = false;
@@ -49,10 +53,17 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   private _movieName: string;
   /**
-   * Variable privada para el nombre de la pelicula a buscar
+   * Variable privada para saber si está en la lista de deseo
    */
   public isWishList: boolean;
-
+  /**
+   * Variable privada para saber si está en description
+   */
+  public isDescription: boolean;
+  /**
+   * Variable privada para saber el id de la pelicula
+   */
+  public idMovie: string;
   /**
    * define arreglo de subscripciones que maneja todas las subscripciones del componente
    */
@@ -64,16 +75,20 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.isWishList = this._route.snapshot?.url[0]?.path === ERoutes.wishList;
+    this.isDescription = this._route.snapshot?.url[0]?.path === ERoutes.description;
+    this.idMovie = this._route.snapshot?.url[1]?.path;
   }
 
   /**
    * Metodo para inicializar el componente
    */
   ngOnInit(): void {
-    if (!this.isWishList) {
+    if (!this.isWishList && !this.isDescription) {
       this.getMovies('superman');
-    } else {
+    } else if (this.isWishList) {
       this.getFavortiesMovies(true);
+    } else if (this.isDescription) {
+      this.getOneMovie();
     }
   }
 
@@ -84,19 +99,6 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
     this._arraySubscriptors.forEach(sub => sub.unsubscribe());
   }
 
-  /**
-   * get que obtiene el tipo de operación actual
-   */
-  get getRoutWishList() {
-    return this._route.snapshot.url[1].path;
-  }
-
-  /**
- * get utilizado para saber si el tipo de operacion es crear
- */
-  get isCrear() {
-    return this.getRoutWishList === ERoutes.wishList;
-  }
   /**
    * Metodo para buscar peliculas
    * @param movieName variable que contiene el nombre de la pelicula
@@ -184,5 +186,20 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   public getFavortiesMovies(event: boolean = false): void {
     if (event && this.isWishList) this.search = this.storageService.getMovies();
+  }
+  /**
+   * Metodo para encontrar una pelicula
+   */
+  getOneMovie() {
+
+    const moviePageSub: Subscription = this.movieService.getOneMovies(this.idMovie).subscribe((data: Search) => {
+      if (!!data) {
+        this.oneMovieDesription = data;
+      }
+      else {
+        SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No no sé encontró la pelicula seleccionada');
+      }
+    });;
+    this._arraySubscriptors.push(moviePageSub);
   }
 }

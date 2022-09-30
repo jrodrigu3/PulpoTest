@@ -8,6 +8,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: PrincipalPageComponent },
       { path: 'wish-list', component: PrincipalPageComponent },
+      { path: 'description/:id', component: PrincipalPageComponent },
     ]
   },
   {

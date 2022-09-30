@@ -3,4 +3,5 @@
  */
  export enum ERoutes {
   wishList = 'wish-list',
+  description = 'description',
 }

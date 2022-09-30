@@ -1,3 +1,5 @@
+* {}
+
 section.character__list {
   display: flex;
   flex-wrap: wrap;
@@ -9,24 +11,26 @@ section.character__list {
 .container {
   display: flex;
   justify-content: center;
+  background-color: var(--off-white);
 }
 
 .navBar {
   display: flex;
   justify-content: center;
   width: auto;
+  background-color: var(--off-white);
 }
 
 .button {
   position: fixed;
   bottom: 20px;
-  right: 30px;
+  right: 5px;
   z-index: 3;
-  padding: 1rem;
+  padding: 1.6rem;
   background-color: #1f1e1e00;
   border: 5px solid #1f1e1e00;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 3.5rem;
   width: 45px;
   height: 45px;
   display: flex;
@@ -47,11 +51,29 @@ section.character__list {
   align-items: center;
 }
 
+.descriptions {
+  display: flex;
+  justify-content: center;
+  background-color: var(--off-white);
+  min-height: 517px;
+  padding: 70px;
+  height: 100vh;
+
+}
 
 @media (min-width: 700px) {
   .navBar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+  }
+
+  .descriptions {
+    align-items: center;
+    height: 100vh;
+  }
+
+  .button {
+    right: 30px;
   }
 }

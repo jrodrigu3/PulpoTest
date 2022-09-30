@@ -1,5 +1,5 @@
 <article class="card">
-  <a [routerLink]="['/movie-details', movie?.imdbID]" class="card__link">
+  <a [routerLink]="['description/', movie?.imdbID]" class="card__link">
     <figure>
       <img rel="preload" as="image" class="movieImg" [src]="movie?.Poster" [alt]="movie?.Title" />
     </figure>
