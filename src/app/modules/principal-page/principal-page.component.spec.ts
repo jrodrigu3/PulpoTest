@@ -1,11 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { MaterialModule } from 'src/app/core/material.module';
-import { PrincipalPageRoutingModule } from './principal-page-routing.module';
 
 import { PrincipalPageComponent } from './principal-page.component';
 
@@ -16,13 +12,9 @@ describe('PrincipalPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
-        PrincipalPageRoutingModule,
         HttpClientModule,
         TranslateModule,
-        ReactiveFormsModule,
-        InfiniteScrollModule,
-        MaterialModule
+        RouterTestingModule
       ],
       declarations: [PrincipalPageComponent],
     })
