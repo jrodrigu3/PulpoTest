@@ -4,13 +4,13 @@ Hola, mi nombre es josé, encantando de que quieras conoces mi proyecto.
 En esta página podrás saber un poco más de mí.
 https://jrodrigu3.github.io
 
-A continuación, un desarrollo de una página web de movie, con la API escogida para esta página es OMDB http://www.omdbapi.com/
+A continuación, un desarrollo de una página web de movie full responsive, con la API escogida para esta página es OMDB http://www.omdbapi.com/
 
 #Consideraciones 
 
 Hecha con CSS puro, con buenas prácticas de accesibilidad y SEO.
-Angular 4
-Pruebas unitarias
+Angular 14
+Pruebas unitarias - Total de 10 pruebas
 Reutilización de componentes
 Entre otros.
 Abajo encontrarás información de como ejecutar el proyecto y las pruebas TDD
