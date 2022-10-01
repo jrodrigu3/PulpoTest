@@ -164,7 +164,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para buscar peliculas con el scroll - Lazy loading
    */
   public onScrollDown(): void {
-    if (!this.isWishList) {
+    if (!this.isWishList && !this.isDescription) {
       this._pageNum++;
       const moviePageSub: Subscription = this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
         if (!!data) {

@@ -1,5 +1,3 @@
-* {}
-
 section.character__list {
   display: flex;
   flex-wrap: wrap;
@@ -8,10 +6,12 @@ section.character__list {
   max-width: 1300px;
 }
 
-.container {
+.contenedor {
   display: flex;
   justify-content: center;
   background-color: var(--off-white);
+  align-items: center;
+  min-height: -webkit-fill-available;
 }
 
 .navBar {
@@ -70,7 +70,7 @@ section.character__list {
 
   .descriptions {
     align-items: center;
-    height: 100vh;
+    height: calc(100vh - 50px);
   }
 
   .button {

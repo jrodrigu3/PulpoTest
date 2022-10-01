@@ -1,7 +1,7 @@
 <article class="card">
-  <a [routerLink]="['description/', movie?.imdbID]" class="card__link">
+  <a [routerLink]="['/home/description', movie?.imdbID]" class="card__link">
     <figure>
-      <img rel="preload" as="image" class="movieImg" [src]="movie?.Poster" [alt]="movie?.Title" />
+      <img class="img__movie" rel="preload" as="image" [src]="getPoster()" [alt]="movie?.Title" />
     </figure>
   </a>
   <div class="card__details">
@@ -9,7 +9,7 @@
       <img (click)="setFavorite()" rel="preload" as="image" src="../../../../../assets/images/{{getIcon()}}"
         [alt]="movie?.Title" />
     </figure>
-    <h3>{{movie?.Title}}</h3>
+    <h3>{{movie?.Title | MaxCharapters: 44}}</h3>
     <p><strong> {{ 'TITLE.ANHO' | translate }}</strong>:</p>{{movie?.Year}}
   </div>
 </article>

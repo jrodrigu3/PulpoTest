@@ -22,14 +22,32 @@ export class TarjetaComponent implements OnInit {
    */
   @Output() eventMovie: EventEmitter<boolean> = new EventEmitter();
 
+  /**
+   * Metodo on init
+   */
   ngOnInit(): void {
     this.getIcon();
   }
 
+  /**
+   * Metodo para saber el icono de favorito
+   * @returns Retorna el icono correspondiente
+   */
   getIcon(): string {
     return this.movie?.favorite ? 'heart-solid.svg' : 'heart.svg';
   }
 
+  /**
+   *
+   * @returns Metodo para saber la imagen del poster
+   */
+  getPoster(): string {
+    return this.movie?.Poster !== 'N/A' ? this.movie?.Poster : '../../../../../assets/images/noMovie.png';
+  }
+
+  /**
+   * Metodo que hace el set de favoritos
+   */
   setFavorite(): void {
     const isFavorite = this.movie.favorite;
     this.getIcon();

@@ -7,6 +7,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MaterialModule } from 'src/app/core/material.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 import { PrincipalPageRoutingModule } from '../../principal-page-routing.module';
 
 import { TarjetaComponent } from './tarjeta.component';
@@ -27,6 +28,7 @@ describe('TarjetaComponent', () => {
         ReactiveFormsModule,
         InfiniteScrollModule,
         MaterialModule,
+        SharedModule,
         RouterTestingModule,
         TranslateModule.forRoot({
           loader: {

@@ -13,6 +13,7 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { SpinnerIntercepor } from 'src/app/shared/interceptors/spinner.interceptor';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/core/material.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   declarations: [
     TarjetaComponent,
@@ -27,8 +28,8 @@ import { MaterialModule } from 'src/app/core/material.module';
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     InfiniteScrollModule,
-    MaterialModule
-
+    MaterialModule,
+    SharedModule
   ],
   providers: [
     MovieService,
