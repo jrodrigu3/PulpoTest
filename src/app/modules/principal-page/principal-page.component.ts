@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Inject, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, inject, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
@@ -12,7 +12,8 @@ import { ERoutes } from 'src/app/core/enum/tipoOperacion.enum';
 @Component({
   selector: 'app-principal-page',
   templateUrl: './principal-page.component.html',
-  styleUrls: ['./principal-page.component.scss']
+  styleUrls: ['./principal-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrincipalPageComponent implements OnInit, OnDestroy {
 
@@ -24,6 +25,10 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Injeccion del servicio de storage
    */
   private storageService = inject(LocalStorageService);
+  /**
+   * change detection
+   */
+  private cd = inject(ChangeDetectorRef);
   /**
    * Injeccion del servicio de storage
    */
@@ -65,9 +70,9 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   public idMovie: string;
   /**
-   * define arreglo de subscripciones que maneja todas las subscripciones del componente
+   * quitar subscripciones
    */
-  private _arraySubscriptors: Array<Subscription> = [];
+  private unsubcribe$ = new Subject<void>();
 
   /**
    * Metodo contructor
@@ -96,7 +101,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo encargado de destruir el componente
    */
   ngOnDestroy(): void {
-    this._arraySubscriptors.forEach(sub => sub.unsubscribe());
+    this.unsubcribe$.next();
+    this.unsubcribe$.complete();
   }
 
   /**
@@ -104,22 +110,24 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * @param movieName variable que contiene el nombre de la pelicula
    */
   public getMovies(movieName: string): void {
-    const movieSub: Subscription = this.movieService.getMovies('movie', movieName).subscribe((data: DataResponse) => {
-      if (!!data) {
-        if (!!data.Search) {
-          this._movieName = movieName;
-          this._pageNum = 1;
-          this.search = data.Search;
-          this.moviesData(this.search);
-          if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
-            this.onScrollDown();
-          };
-        } else {
-          SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
+    this.movieService.getMovies('movie', movieName)
+      .pipe(takeUntil(this.unsubcribe$))
+      .subscribe((data: DataResponse) => {
+        if (!!data) {
+          if (!!data.Search) {
+            this._movieName = movieName;
+            this._pageNum = 1;
+            this.search = data.Search;
+            this.moviesData(this.search);
+            if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
+              this.onScrollDown();
+            };
+          } else {
+            SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
+          }
+          this.cd.markForCheck();
         }
-      }
-    });
-    this._arraySubscriptors.push(movieSub);
+      });
   }
 
   /**
@@ -166,18 +174,19 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
   public onScrollDown(): void {
     if (!this.isWishList && !this.isDescription) {
       this._pageNum++;
-      const moviePageSub: Subscription = this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).subscribe((data: DataResponse) => {
-        if (!!data) {
-          if (!!data.Search) {
-            this.search = [...this.search, ...data.Search];
-            this.moviesData(this.search);
+      this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).
+        pipe(takeUntil(this.unsubcribe$)).subscribe((data: DataResponse) => {
+          if (!!data) {
+            if (!!data.Search) {
+              this.search = [...this.search, ...data.Search];
+              this.moviesData(this.search);
+            }
+            else {
+              SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
+            }
+            this.cd.markForCheck();
           }
-          else {
-            SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
-          }
-        }
-      });;
-      this._arraySubscriptors.push(moviePageSub);
+        });;
     }
   }
 
@@ -191,15 +200,15 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para encontrar una pelicula
    */
   getOneMovie() {
-
-    const moviePageSub: Subscription = this.movieService.getOneMovies(this.idMovie).subscribe((data: Search) => {
-      if (!!data) {
-        this.oneMovieDesription = data;
-      }
-      else {
-        SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No no sé encontró la pelicula seleccionada');
-      }
-    });;
-    this._arraySubscriptors.push(moviePageSub);
+    this.movieService.getOneMovies(this.idMovie)
+      .pipe(takeUntil(this.unsubcribe$)).subscribe((data: Search) => {
+        if (!!data) {
+          this.oneMovieDesription = data;
+        }
+        else {
+          SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No no sé encontró la pelicula seleccionada');
+        }
+        this.cd.markForCheck();
+      });;
   }
 }
