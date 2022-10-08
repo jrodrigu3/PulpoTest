@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import { SwalUtils } from 'src/app/core/utils/swal-util';
 import { ActivatedRoute } from '@angular/router';
 import { ERoutes } from 'src/app/core/enum/tipoOperacion.enum';
+import { MovieServiceService } from './services/movie-service.service';
 
 @Component({
   selector: 'app-principal-page',
@@ -25,6 +26,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Injeccion del servicio de storage
    */
   private storageService = inject(LocalStorageService);
+
+  private stateService = inject(MovieServiceService);
   /**
    * change detection
    */
@@ -74,6 +77,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   private unsubcribe$ = new Subject<void>();
 
+  task$: Observable<any>;
   /**
    * Metodo contructor
    * @param document document
@@ -88,13 +92,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para inicializar el componente
    */
   ngOnInit(): void {
-    if (!this.isWishList && !this.isDescription) {
-      this.getMovies('superman');
-    } else if (this.isWishList) {
-      this.getFavortiesMovies(true);
-    } else if (this.isDescription) {
-      this.getOneMovie();
-    }
+    this.task$ = this.stateService.getMovies('superman');
+    // this.getMovies('superman');
   }
 
   /**
