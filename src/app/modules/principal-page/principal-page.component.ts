@@ -53,14 +53,6 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   private _scrollHeight = 200;
   /**
-   * variable primada para la pagina inicial
-   */
-  private _pageNum = 1;
-  /**
-   * Variable privada para el nombre de la pelicula a buscar
-   */
-  private _movieName: string;
-  /**
    * Variable privada para saber si está en la lista de deseo
    */
   public isWishList: boolean;
@@ -92,53 +84,15 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para inicializar el componente
    */
   ngOnInit(): void {
-    this.task$ = this.stateService.getMovies('superman');
-    // this.getMovies('superman');
+    this.task$ = this.stateService.selectMovies;
+    this.stateService.getMovies('superman');
   }
 
   /**
    * Metodo encargado de destruir el componente
    */
   ngOnDestroy(): void {
-    this.unsubcribe$.next();
-    this.unsubcribe$.complete();
-  }
-
-  /**
-   * Metodo para buscar peliculas
-   * @param movieName variable que contiene el nombre de la pelicula
-   */
-  public getMovies(movieName: string): void {
-    this.movieService.getMovies('movie', movieName)
-      .pipe(takeUntil(this.unsubcribe$))
-      .subscribe((data: DataResponse) => {
-        if (!!data) {
-          if (!!data.Search) {
-            this._movieName = movieName;
-            this._pageNum = 1;
-            this.search = data.Search;
-            this.moviesData(this.search);
-            if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
-              this.onScrollDown();
-            };
-          } else {
-            SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
-          }
-          this.cd.markForCheck();
-        }
-      });
-  }
-
-  /**
-   * metodo para add propiedad favorite
-   * @param movie contiene la listas de peliculas encontradas
-   */
-  private moviesData(movie: Array<Search>): void {
-    const fav = this.storageService.getMovies();
-    movie.forEach(mov => {
-      const found = !!fav.find((favorite: Search) => favorite.imdbID === mov.imdbID);
-      mov.favorite = found;
-    });
+    this.stateService.subscritionsDestroy();
   }
 
   /**
@@ -146,8 +100,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * @param movieName nombre de la pelicula
    */
   public onMovie(movieName: string): void {
-    this._movieName = movieName;
-    this.getMovies(movieName)
+    this.stateService.findOneMovie(movieName);
   }
 
   /**
@@ -171,29 +124,14 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para buscar peliculas con el scroll - Lazy loading
    */
   public onScrollDown(): void {
-    if (!this.isWishList && !this.isDescription) {
-      this._pageNum++;
-      this.movieService.getMoviesPage('movie', this._movieName, this._pageNum).
-        pipe(takeUntil(this.unsubcribe$)).subscribe((data: DataResponse) => {
-          if (!!data) {
-            if (!!data.Search) {
-              this.search = [...this.search, ...data.Search];
-              this.moviesData(this.search);
-            }
-            else {
-              SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No hay más peliculas');
-            }
-            this.cd.markForCheck();
-          }
-        });;
-    }
+    this.stateService.onScrollDown(!this.isDescription && !this.isWishList)
   }
 
   /**
    * Obtiene las peliculas favoritas del local storage
    */
   public getFavortiesMovies(event: boolean = false): void {
-    if (event && this.isWishList) this.search = this.storageService.getMovies();
+      if (event && this.isWishList) this.search = this.storageService.getMovies();
   }
   /**
    * Metodo para encontrar una pelicula

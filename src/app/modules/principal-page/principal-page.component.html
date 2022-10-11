@@ -1,7 +1,24 @@
-<ng-container *ngIf="task$ |  async as movies">
-  <app-tarjeta (eventMovie)="getFavortiesMovies($event)" *ngFor="let movie of movies" [movie]="movie">
-  </app-tarjeta>
+<ng-container *ngIf="!isDescription">
+  <ng-container *ngTemplateOutlet="principalView"></ng-container>
 </ng-container>
+
+<!-- <div *ngIf="isDescription">
+  <ng-container *ngTemplateOutlet="description"></ng-container>
+</div> -->
+
+<ng-template #principalView>
+  <div *ngIf="!isWishList && !isWishList" class="navBar">
+    <app-nav-bar (eventMovie)="onMovie($event)"></app-nav-bar>
+  </div>
+  <div class="contenedor">
+    <ng-container *ngIf="task$ |  async as movies">
+      <section class="character__list" infiniteScroll (scrolled)="onScrollDown()">
+        <app-tarjeta (eventMovie)="getFavortiesMovies($event)" *ngFor="let movie of movies" [movie]="movie">
+        </app-tarjeta>
+      </section>
+    </ng-container>
+  </div>
+</ng-template>
 
 
 
@@ -12,3 +29,21 @@
     <button *ngIf="showButton" (click)="onScrollTop()" class="button">⬆️</button>
   </section>
 </div> -->
+
+<!-- <ng-template #principalView>
+  <div *ngIf="!isWishList && !isWishList" class="navBar">
+    <app-nav-bar (eventMovie)="onMovie($event)"></app-nav-bar>
+  </div>
+  <div class="contenedor">
+    <section *ngIf="!!search" class="character__list" infiniteScroll (scrolled)="onScrollDown()">
+      <app-tarjeta (eventMovie)="getFavortiesMovies($event)" *ngFor="let movie of search" [movie]="movie"></app-tarjeta>
+      <button *ngIf="showButton" (click)="onScrollTop()" class="button">⬆️</button>
+    </section>
+  </div>
+</ng-template> -->
+
+<!-- <ng-template #description>
+  <div class="descriptions">
+    <app-tarjeta [movie]="oneMovieDesription"></app-tarjeta>
+  </div>
+</ng-template> -->
