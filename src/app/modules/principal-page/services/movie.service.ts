@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 
 @Injectable({
@@ -8,6 +8,8 @@ import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 })
 export class MovieService {
 
+  private itemMovie$: BehaviorSubject<{ movies: DataResponse, movieName: string }> = new BehaviorSubject<{ movies: DataResponse, movieName: string }>(null);
+  public dataMovie$: Observable<{ movies: DataResponse, movieName: string }> = this.itemMovie$.asObservable();
   /**
    * Injeccion del HttpClient
    */
@@ -27,8 +29,10 @@ export class MovieService {
    * @param type Tipo de movies
    * @param name nombre de la pelicula
    */
-  getMovies(type: string = 'movie', name: string): Observable<DataResponse> {
-    return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`);
+  getMovies(type: string = 'movie', name: string): void {
+    this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`).pipe(take(1)).subscribe(response => {
+      this.itemMovie$.next({ movies: response, movieName: name });
+    });
   }
 
   /**

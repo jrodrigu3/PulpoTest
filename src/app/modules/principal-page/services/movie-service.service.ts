@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { map, observable, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
 import { StateService } from 'src/app/core/services/state-service.service';
 import { SwalUtils } from 'src/app/core/utils/swal-util';
@@ -35,25 +35,17 @@ export class MovieServiceService extends StateService<MovieState> {
 
   private _pageNum = 1;
   private _movieName: string;
+  private movies$: Subscription;
 
   constructor() {
     super(initialState);
-  }
-
-
-  public get selectMovies() {
-    return this.select(s => s.movies);
-  }
-
-  public getMovies(movieName: string): void {
     const fav: Search[] = this.storageService.getMovies();
-    this.movieService.getMovies('movie', movieName).pipe(takeUntil(this.unsubcribe$))
-      .subscribe((data => {
-        console.log(data);
+    this.movies$ = this.movieService.dataMovie$.
+      pipe(takeUntil(this.unsubcribe$)).subscribe((data => {
         if (!!data) {
-          if (!!data.Search) {
-            this.searchMovies = data.Search;
-            this._movieName = movieName;
+          if (!!data.movies.Search) {
+            this.searchMovies = data.movies.Search;
+            this._movieName = data.movieName;
             this._pageNum = 1;
             const ms: Search[] = this.findFavoriteInStorage(fav);
             this.setState({ movies: [...ms] });
@@ -64,7 +56,16 @@ export class MovieServiceService extends StateService<MovieState> {
         } else {
           this.setState({ movies: [] });
         }
-      }));
+      }));;
+  }
+
+
+  public get selectMovies() {
+    return this.select(s => s.movies);
+  }
+
+  public getMovies(movieName: string): void {
+    this.movieService.getMovies('movie', movieName);
   }
 
   public findFavoriteInStorage(fav: Search[]): Search[] {
