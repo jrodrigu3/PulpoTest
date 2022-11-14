@@ -1,10 +1,12 @@
 import { ModuleWithProviders } from "@angular/core";
 import { ActionReducer, ActionReducerMap, MetaReducer } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { HomePageState } from "./home.reducers";
 import { PersonState, reducer } from "./person.reducers";
 
-export interface RootState {
-  person: PersonState
+/* export interface RootState {
+  person: PersonState,
+  homePageState: HomePageState
 }
 export const reducers: ActionReducerMap<RootState> = {
   person: reducer
@@ -15,4 +17,4 @@ export const debug = (reducer: ActionReducer<any>): ActionReducer<any> => {
 
 export const metaReducers: MetaReducer<RootState>[] = [debug];
 
-export const storeDevTools: ModuleWithProviders<any>[] = [StoreDevtoolsModule.instrument({ name: "My Store" })];
+export const storeDevTools: ModuleWithProviders<any>[] = [StoreDevtoolsModule.instrument({ name: "My Store" })]; */
