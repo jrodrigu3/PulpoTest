@@ -77,8 +77,10 @@ export class MovieServiceService extends StateService<MovieState> {
   }
 
   public findOneMovie(movieName: string) {
-    this._movieName = movieName;
-    this.getMovies(movieName)
+    /* this._movieName = movieName;
+    this.getMovies(movieName) */
+
+
   }
 
   public subscritionsDestroy(): void {

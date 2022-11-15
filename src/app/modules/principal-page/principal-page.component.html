@@ -11,7 +11,7 @@
     <app-nav-bar (eventMovie)="onMovie($event)"></app-nav-bar>
   </div>
   <div class="contenedor">
-    <ng-container *ngIf="task$ |  async as movies">
+    <ng-container *ngIf="movies$ |  async as movies">
       <section class="character__list" infiniteScroll (scrolled)="onScrollDown()">
         <app-tarjeta (eventMovie)="getFavortiesMovies($event)" *ngFor="let movie of movies" [movie]="movie">
         </app-tarjeta>

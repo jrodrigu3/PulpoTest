@@ -3,18 +3,21 @@ import { ActionReducer, ActionReducerMap, MetaReducer } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { HomePageState } from "./home.reducers";
 import { PersonState, reducer } from "./person.reducers";
-
-/* export interface RootState {
+import * as fromHome from "./home.reducers"
+export interface RootState {
   person: PersonState,
-  homePageState: HomePageState
+  homePage: HomePageState
 }
 export const reducers: ActionReducerMap<RootState> = {
-  person: reducer
+  person: reducer,
+  homePage: fromHome.reducer
 }
+// const reducerKeys: string[] = ['homePage'];
+
 export const debug = (reducer: ActionReducer<any>): ActionReducer<any> => {
   return (state, action) => reducer(state, action);
 };
 
 export const metaReducers: MetaReducer<RootState>[] = [debug];
 
-export const storeDevTools: ModuleWithProviders<any>[] = [StoreDevtoolsModule.instrument({ name: "My Store" })]; */
+export const storeDevTools: ModuleWithProviders<any>[] = [StoreDevtoolsModule.instrument({ name: "My Store" })];

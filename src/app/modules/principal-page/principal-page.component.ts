@@ -9,6 +9,9 @@ import { SwalUtils } from 'src/app/core/utils/swal-util';
 import { ActivatedRoute } from '@angular/router';
 import { ERoutes } from 'src/app/core/enum/tipoOperacion.enum';
 import { MovieServiceService } from './services/movie-service.service';
+import { HomePageState, selectMovies } from 'src/app/state/reducers/home.reducers';
+import { homeActions } from "./../../state/actions"
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-principal-page',
@@ -36,6 +39,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Injeccion del servicio de storage
    */
   private _route = inject(ActivatedRoute);
+
+
   /**
    * Array de peliculas encontradas
    */
@@ -69,12 +74,12 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    */
   private unsubcribe$ = new Subject<void>();
 
-  task$: Observable<any>;
+  movies$: Observable<any>;
   /**
    * Metodo contructor
    * @param document document
    */
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  constructor(@Inject(DOCUMENT) private document: Document, private store: Store<HomePageState>) {
     this.isWishList = this._route.snapshot?.url[0]?.path === ERoutes.wishList;
     this.isDescription = this._route.snapshot?.url[0]?.path === ERoutes.description;
     this.idMovie = this._route.snapshot?.url[1]?.path;
@@ -84,7 +89,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Metodo para inicializar el componente
    */
   ngOnInit(): void {
-    this.task$ = this.stateService.selectMovies;
+    // this.movies$ = this.stateService.selectMovies;
+    this.movies$ = this.store.select(selectMovies);
     this.stateService.getMovies('superman');
   }
 
@@ -100,7 +106,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * @param movieName nombre de la pelicula
    */
   public onMovie(movieName: string): void {
-    this.stateService.findOneMovie(movieName);
+    this.store.dispatch(homeActions.moviesRequested({ criteria: movieName }));
+    // this.stateService.findOneMovie(movieName);
   }
 
   /**
@@ -131,7 +138,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * Obtiene las peliculas favoritas del local storage
    */
   public getFavortiesMovies(event: boolean = false): void {
-      if (event && this.isWishList) this.search = this.storageService.getMovies();
+    if (event && this.isWishList) this.search = this.storageService.getMovies();
   }
   /**
    * Metodo para encontrar una pelicula
