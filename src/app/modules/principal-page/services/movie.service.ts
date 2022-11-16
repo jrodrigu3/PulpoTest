@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, take } from 'rxjs';
-import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
+import { BehaviorSubject, map, Observable, take } from 'rxjs';
+import { DataResponse, Movie, Search } from 'src/app/core/interfaces/movie.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,12 @@ export class MovieService {
     this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`).pipe(take(1)).subscribe(response => {
       this.itemMovie$.next({ movies: response, movieName: name });
     });
+  }
+
+  getMoviesTest(type: string = 'movie', name: string): Observable<Movie[]> {
+    return this.http.get<DataResponse>(`${this.urlService}?apikey=${this.apiKey}&s=${name}&type=${type}`).pipe(take(1), map(response => {
+      return response.Search;
+    }));
   }
 
   /**

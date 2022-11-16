@@ -1,6 +1,6 @@
 export interface DataResponse {
   Response: string;
-  Search?: Array<Search>;
+  Search?: Array<Movie>;
   totalResults?: number;
 }
 
