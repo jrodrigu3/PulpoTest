@@ -91,7 +91,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.movies$ = this.stateService.selectMovies;
     this.movies$ = this.store.select(selectMovies);
-    this.stateService.getMovies('superman');
+    // this.stateService.getMovies('superman');
   }
 
   /**

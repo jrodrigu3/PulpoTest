@@ -1,5 +1,6 @@
-import { Action, createFeatureSelector, createReducer, createSelector } from "@ngrx/store";
+import { Action, createFeatureSelector, createReducer, createSelector, on } from "@ngrx/store";
 import { Movie } from "src/app/core/interfaces/movie.interface";
+import { moviesSucced } from "../actions/home.actions";
 export interface HomePageState {
     searchCriteria: string;
     movies: Movie[]
@@ -9,7 +10,9 @@ export const initialState: HomePageState = {
     movies: []
 };
 
-const homePageReducers = createReducer(initialState);
+const homePageReducers = createReducer(initialState, on(moviesSucced, (state, { movies }) => ({
+    ...state, movies
+})));
 
 export const reducer = (state: HomePageState | undefined, action: Action): HomePageState =>
     homePageReducers(state, action);
