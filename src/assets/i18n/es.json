@@ -1,16 +1,24 @@
 {
   "BOTONES": {
-    "BUSCAR": "Buscar"
+    "BUSCAR": "Buscar",
+    "SAVE": "Guardar"
   },
   "HEADER": {
     "HOME": "Home",
-    "WISH_LIST": "Wish list"
+    "WISH_LIST": "Wish list",
+    "CREATE_MOVIE": "Crear pelicula"
+  },
+  "LABELS": {
+    "CAMPO_REQUERIDO": "Campo requerido",
+    "NAME": "Nombre",
+    "URL": "Url img",
+    "YEAR": "Año"
   },
   "TEXT": {
     "BUSCAR_NAME": "Buscar por nombre"
   },
   "TITLE": {
-    "TITULO": "Titulo",
-    "ANHO": "Año"
+    "ANHO": "Año",
+    "TITULO": "Titulo"
   }
 }

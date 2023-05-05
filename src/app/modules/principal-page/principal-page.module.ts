@@ -14,11 +14,13 @@ import { SpinnerIntercepor } from 'src/app/shared/interceptors/spinner.intercept
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/core/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CreateMovieComponent } from './components/create-movie/create-movie.component';
 @NgModule({
   declarations: [
     TarjetaComponent,
     PrincipalPageComponent,
     NavBarComponent,
+    CreateMovieComponent,
   ],
   imports: [
     CommonModule,

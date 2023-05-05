@@ -12,3 +12,11 @@ export interface Search {
   Poster: string;
   favorite: boolean;
 }
+
+export interface movieSaved {
+  imdbID?: number;
+  year: number;
+  name: string;
+  urlImage: string;
+  favorite: boolean;
+}

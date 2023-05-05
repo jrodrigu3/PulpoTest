@@ -1,0 +1,26 @@
+<form class="form-movie" [formGroup]="movieForm">
+
+  <div class="inputGroup">
+    <input type="text" required="" formControlName="name" autocomplete="off">
+    <label for="name">{{ 'LABELS.NAME' | translate}}</label>
+    <mat-error *ngIf="movieForm.get('name').hasError('required') && movieForm.get('name').touched">
+      {{ 'LABELS.CAMPO_REQUERIDO' | translate}}</mat-error>
+  </div>
+
+  <div class="inputGroup">
+    <input type="number" required="" formControlName="year" autocomplete="off">
+    <label for="name">{{ 'LABELS.YEAR' | translate}}</label>
+    <mat-error *ngIf="movieForm.get('year').hasError('required') && movieForm.get('year').touched">
+      {{ 'LABELS.CAMPO_REQUERIDO' | translate}}</mat-error>
+  </div>
+
+  <div class="inputGroup">
+    <input type="text" required="" formControlName="urlImage" autocomplete="off">
+    <label for="name">{{ 'LABELS.URL' | translate}}</label>
+    <mat-error *ngIf="movieForm.get('urlImage').hasError('required') && movieForm.get('urlImage').touched">
+      {{ 'LABELS.CAMPO_REQUERIDO' | translate}}</mat-error>
+  </div>
+
+  <button (click)="saveMovie()"> {{ 'BOTONES.SAVE' | translate}} </button>
+
+</form>

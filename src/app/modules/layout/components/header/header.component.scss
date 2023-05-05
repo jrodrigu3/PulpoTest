@@ -1,8 +1,8 @@
 .navMenu {
   margin-right: -29px;
   font-size: 1.6rem;
+  margin-top: 10px;
   margin-bottom: -18px;
-  margin-top: 12px;
 }
 
 .navMenu a {
@@ -64,4 +64,9 @@
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   opacity: 1;
+}
+
+.navMenu .extra-width {
+  margin-left: 10px;
+  width: 230px;
 }

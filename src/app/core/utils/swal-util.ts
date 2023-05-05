@@ -8,5 +8,14 @@ export let SwalUtils = {
       text: 'No hay más peliculas',
       timer: 800
     });
+  },
+
+  mensajeSaved(icon: string = "", title: string = "", text: string = ""): void {
+    Swal.fire({
+      icon: 'success',
+      title: 'MOVIE',
+      text: 'SAVED',
+      timer: 800
+    });
   }
 }

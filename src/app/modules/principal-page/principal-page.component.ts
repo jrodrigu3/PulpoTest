@@ -1,13 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, takeUntil } from 'rxjs';
-import { DataResponse, Search } from 'src/app/core/interfaces/movie.interface';
+import { catchError, map, Subject, Subscription, takeUntil, throwError } from 'rxjs';
+import { DataResponse, movieSaved, Search } from 'src/app/core/interfaces/movie.interface';
 import { LocalStorageService } from './services/localStorage.service';
 import { MovieService } from './services/movie.service';
 import Swal from 'sweetalert2'
 import { SwalUtils } from 'src/app/core/utils/swal-util';
 import { ActivatedRoute } from '@angular/router';
 import { ERoutes } from 'src/app/core/enum/tipoOperacion.enum';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-principal-page',
@@ -93,7 +94,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
     } else if (this.isWishList) {
       this.getFavortiesMovies(true);
     } else if (this.isDescription) {
-      this.getOneMovie();
+      this.descriptionMovie();
     }
   }
 
@@ -110,24 +111,34 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
    * @param movieName variable que contiene el nombre de la pelicula
    */
   public getMovies(movieName: string): void {
-    this.movieService.getMovies('movie', movieName)
-      .pipe(takeUntil(this.unsubcribe$))
-      .subscribe((data: DataResponse) => {
-        if (!!data) {
-          if (!!data.Search) {
-            this._movieName = movieName;
-            this._pageNum = 1;
-            this.search = data.Search;
-            this.moviesData(this.search);
-            if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
-              this.onScrollDown();
-            };
-          } else {
-            SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
+    this.movieService
+      .getMovies('movie', movieName)
+      .pipe(
+        takeUntil(this.unsubcribe$),
+        map((response: DataResponse) => {
+          if (!!response) {
+            if (!!response?.Search) {
+              this._movieName = movieName;
+              this._pageNum = 1;
+              this.search = this.setMovieSaved(response.Search);
+              this.moviesData(this.search);
+              if (this.document.documentElement.scrollHeight > 910 && this.search.length <= 10) {
+                this.onScrollDown();
+              };
+            } else {
+              SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No se encontró la pelicula');
+            }
+            this.cd.markForCheck();
           }
-          this.cd.markForCheck();
-        }
-      });
+        }),
+        catchError(
+          /* istanbul ignore next */
+          (error: HttpErrorResponse) => {
+            return throwError(error);
+          }
+        )
+      )
+      .subscribe();
   }
 
   /**
@@ -140,6 +151,27 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
       const found = !!fav.find((favorite: Search) => favorite.imdbID === mov.imdbID);
       mov.favorite = found;
     });
+  }
+
+  public setMovieSaved(searchResults: Search[]): Search[] {
+    const moviesSaved: movieSaved[] = this.storageService.getMoviesSaved();
+    return this.mergeMovies(moviesSaved, searchResults);;
+  }
+
+  public mergeMovies(savedMovies: movieSaved[], searchResults: Search[]): Search[] {
+    const mergedMovies: Search[] = [];
+    savedMovies.forEach(savedMovie => {
+      const mergedMovie: Search = {
+        imdbID: savedMovie.imdbID.toString(),
+        Year: savedMovie.year.toString(),
+        Type: '',
+        Title: savedMovie.name,
+        Poster: savedMovie.urlImage,
+        favorite: savedMovie.favorite,
+      };
+      mergedMovies.push(mergedMovie);
+    });
+    return mergedMovies.concat(searchResults);;
   }
 
   /**
@@ -196,6 +228,38 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
   public getFavortiesMovies(event: boolean = false): void {
     if (event && this.isWishList) this.search = this.storageService.getMovies();
   }
+
+
+  public descriptionMovie(): void {
+    const oneMovie = this.storageService.checkOneMovie(this.idMovie);
+    if (oneMovie !== undefined) {
+      if (oneMovie.imdbID === this.idMovie)
+        this.oneMovieDesription = oneMovie;
+      else
+        this.searchMoviesStorageSaved();
+    } else
+      this.searchMoviesStorageSaved();
+  }
+
+  searchMoviesStorageSaved(): void {
+    const movies: movieSaved[] = this.storageService.getMoviesSaved();
+    const oneMovieStorage = movies.find(movie => movie.imdbID.toString() == this.idMovie);
+    if (oneMovieStorage !== undefined) {
+      const movie: Search = {
+        Title: oneMovieStorage.name ?? "",
+        Poster: oneMovieStorage.urlImage ?? "",
+        Year: oneMovieStorage.year.toString() ?? "",
+        imdbID: oneMovieStorage.imdbID.toString() ?? "",
+        favorite: oneMovieStorage.favorite ?? false,
+        Type: ""
+      };
+      this.oneMovieDesription = movie;
+      this.storageService.saveOneMovie(this.oneMovieDesription);
+    } else {
+      this.getOneMovie();
+    }
+  }
+
   /**
    * Metodo para encontrar una pelicula
    */
@@ -204,6 +268,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubcribe$)).subscribe((data: Search) => {
         if (!!data) {
           this.oneMovieDesription = data;
+          this.storageService.saveOneMovie(this.oneMovieDesription);
         }
         else {
           SwalUtils.mensajeErrorCorrect('error', 'Oops...', 'No no sé encontró la pelicula seleccionada');
